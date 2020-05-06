@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "a nodejs library for parsing smartapi specifications",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "load-json-file": "^6.2.0"
+  },
   "devDependencies": {
     "coveralls": "^3.1.0",
     "jest": "^26.0.1"
