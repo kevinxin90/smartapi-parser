@@ -11,7 +11,7 @@ class API {
         try {
             this.smartapiDoc = await loadJsonFile(this.smartapiSpecPath);
         } catch(err) {
-            console.log(err);
+            throw new Error("Unable to load your input file");
         }
     }
 }
