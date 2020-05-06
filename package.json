@@ -1,0 +1,28 @@
+{
+  "name": "smartapi-parser",
+  "version": "1.0.0",
+  "description": "a nodejs library for parsing smartapi specifications",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "coveralls": "^3.1.0",
+    "jest": "^26.0.1"
+  },
+  "scripts": {
+    "test": "jest",
+    "coveralls": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kevinxin90/smartapi-parser.git"
+  },
+  "keywords": [
+    "smartapi"
+  ],
+  "author": "jiwen xin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kevinxin90/smartapi-parser/issues"
+  },
+  "homepage": "https://github.com/kevinxin90/smartapi-parser#readme"
+}
