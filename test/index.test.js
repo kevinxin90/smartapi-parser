@@ -12,3 +12,27 @@ test("load smartapi from file path", async () => {
     }
 })
 
+describe('test API parser', () => {
+    let mygene;
+    beforeAll(async () => {
+        mygene = new main.API("./smartapi/mygene.json");
+        await mygene.loadSmartAPI();
+    });
+  
+    test('test parse API name', () => {
+        expect(mygene.fetchAPIName()).toBe('MyGene.info API');
+    });
+
+    test('test parse API Tags', () => {
+        expect(mygene.fetchAPITags()).toContain("biothings");
+    });
+
+    test("test parse server url", () => {
+        expect(mygene.fetchServerUrl()).toBe("https://mygene.info/v3");
+    });
+
+    test("test fetch response mapping", () => {
+        expect(mygene.fetchResponseMapping(""))
+    })
+  
+});
