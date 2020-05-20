@@ -5,14 +5,15 @@ class API {
     constructor(smartapiSpecPath) {
         this.smartapiSpecPath = smartapiSpecPath;
         this.smartapiDoc = {};
+        this.loadSmartAPI();
     }
     /**
      * Update the primary ID from id options
      * @returns - an id_dict updated with primary id choices
      */
-    loadSmartAPI = async () => {
+    loadSmartAPI = () => {
         try {
-            this.smartapiDoc = await loadJsonFile(this.smartapiSpecPath);
+            this.smartapiDoc = loadJsonFile.sync(this.smartapiSpecPath);
         } catch (err) {
             throw new Error("Unable to load your input file");
         }
