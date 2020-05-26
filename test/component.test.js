@@ -668,7 +668,7 @@ describe('test fetch ref', () => {
     });
 
     test("test wrong ref 2", () => {
-        const rec = cp_obj.fetchComponentByRef("#/components/x-bte-response-mapping/hello");
+        const rec = cp_obj.fetchComponentByRef("#/components/x-bte-response-mapping/hello/world");
         expect(rec).toBeUndefined();
     });
 });
