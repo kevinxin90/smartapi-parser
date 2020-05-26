@@ -1,26 +1,15 @@
-const main = require('../index');
-
-test("load smartapi from file path", async () => {
-    const mygene = new main.API("./smartapi/mygene.json");
-    await mygene.loadSmartAPI();
-    expect(mygene.smartapiDoc["openapi"]).toBe("3.0.0");
-    const wrong = new main.API("./smartapi/notexist.json");
-    try {
-        await wrong.loadSmartAPI();
-    } catch (e) {
-        expect(e.message).toEqual('Unable to load your input file')
-    }
-})
+const api = require('../index');
+const loadJsonFile = require("load-json-file");
 
 describe('test API parser', () => {
-    let mygene;
-    beforeAll(async () => {
-        mygene = new main.API("./smartapi/mygene.json");
-        await mygene.loadSmartAPI();
+    let mygene, metadata, ops;
+    beforeAll(() => {
+        mygene = loadJsonFile.sync("./smartapi/mygene.json")
+        mygene = new api(mygene);
     });
-  
+
     test('test parse API name', () => {
-        expect(mygene.fetchAPIName()).toBe('MyGene.info API');
+        expect(mygene.fetchAPITitle()).toBe('MyGene.info API');
     });
 
     test('test parse API Tags', () => {
@@ -31,8 +20,95 @@ describe('test API parser', () => {
         expect(mygene.fetchServerUrl()).toBe("https://mygene.info/v3");
     });
 
-    test("test fetch response mapping", () => {
-        expect(mygene.fetchResponseMapping(""))
+    test("test parse component", () => {
+        expect(mygene.fetchComponents()).not.toBeUndefined();
+    });
+
+    test("test fetch meta data", () => {
+        metadata = mygene.fetchAPIMeta();
+        expect(metadata.title).toBe("MyGene.info API");
+        expect(metadata.tags).toContain("biothings");
+        expect(metadata.url).toBe("https://mygene.info/v3");
+        expect(metadata.components).not.toBeUndefined();
     })
-  
+
+    test("test fetch all operations", () => {
+        ops = mygene.fetchAllOpts();
+        expect(ops[0].association.api_name).toBe("MyGene.info API")
+    })
+});
+
+describe('test API parser which is already dereferenced', () => {
+    let opentarget, metadata, ops;
+    beforeAll(() => {
+        opentarget = loadJsonFile.sync("./smartapi/opentarget.json")
+        opentarget = new api(opentarget);
+    });
+
+    test("test parse component", () => {
+        expect(opentarget.fetchComponents()).toBeUndefined();
+    });
+
+    test("test fetch meta data", () => {
+        metadata = opentarget.fetchAPIMeta();
+        expect(metadata.title).toBe("OpenTarget API");
+        expect(metadata.tags).toContain("translator");
+        expect(metadata.url).toBe("https://platform-api.opentargets.io/v3");
+        expect(metadata.components).toBeUndefined();
+    })
+
+    test("test fetch all operations", () => {
+        ops = opentarget.fetchAllOpts();
+        expect(ops[0].association.api_name).toBe("OpenTarget API");
+        expect(ops[0].association.predicate).toBe('biolink:related_to');
+        expect(ops[0].association.input_id).toBe('biolink:ENSEMBL');
+        expect(ops[0].query_operation.path).toBe('/platform/public/evidence/filter');
+    })
+});
+
+describe('test API parser when input is empty', () => {
+    let mygene = {};
+    beforeAll(() => {
+        mygene = new api(mygene);
+    });
+
+    test('test parse API name', () => {
+        expect(mygene.fetchAPITitle()).toBeUndefined();
+    });
+
+    test('test parse API Tags', () => {
+        expect(mygene.fetchAPITags()).toBeUndefined();
+    });
+
+    test("test parse server url", () => {
+        expect(mygene.fetchServerUrl()).toBeUndefined();
+    });
+
+    test("test parse component", () => {
+        expect(mygene.fetchComponents()).toBeUndefined();
+    });
+
+});
+
+describe('test API parser when input is mal-structured', () => {
+    let mygene = { 'hello': 'world' };
+    beforeAll(() => {
+        mygene = new api(mygene);
+    });
+
+    test('test parse API name', () => {
+        expect(mygene.fetchAPITitle()).toBeUndefined();
+    });
+
+    test('test parse API Tags', () => {
+        expect(mygene.fetchAPITags()).toBeUndefined();
+    });
+
+    test("test parse server url", () => {
+        expect(mygene.fetchServerUrl()).toBeUndefined();
+    });
+
+    test("test parse component", () => {
+        expect(mygene.fetchComponents()).toBeUndefined();
+    });
 });
