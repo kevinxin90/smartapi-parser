@@ -5,11 +5,12 @@
   "main": "index.js",
   "dependencies": {
     "hash-anything": "^1.2.2",
-    "load-json-file": "^6.2.0"
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
     "coveralls": "^3.1.0",
-    "jest": "^26.0.1"
+    "jest": "^26.0.1",
+    "load-json-file": "^6.2.0"
   },
   "scripts": {
     "test": "jest",
