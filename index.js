@@ -14,9 +14,6 @@ module.exports = class API {
      * Fetch the title of API from SmartAPI Specification.
     */
     fetchAPITitle = () => {
-        if (this.smartapiDoc === {}) {
-            return undefined
-        }
         if (!('info' in this.smartapiDoc)) {
             return undefined
         }
@@ -27,9 +24,6 @@ module.exports = class API {
      * Fetch the tags associated with the API from SmartAPI Specification.
      */
     fetchAPITags = () => {
-        if (this.smartapiDoc === {}) {
-            return undefined
-        }
         if (!('tags' in this.smartapiDoc)) {
             return undefined
         }
@@ -40,9 +34,6 @@ module.exports = class API {
      * Fetch the url of the server from SmartAPI Specification.
      */
     fetchServerUrl = () => {
-        if (this.smartapiDoc === {}) {
-            return undefined
-        }
         if (!('servers' in this.smartapiDoc)) {
             return undefined
         }
@@ -53,9 +44,6 @@ module.exports = class API {
      * Fetch component from SmartAPI Specification.
      */
     fetchComponents = () => {
-        if (this.smartapiDoc === {}) {
-            return undefined
-        }
         if (!('components' in this.smartapiDoc)) {
             return undefined
         }
