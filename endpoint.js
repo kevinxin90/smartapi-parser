@@ -8,16 +8,6 @@ module.exports = class Endpoint {
         this.path = path;
     }
 
-    fetchResponseMapping = (ref) => {
-        const path = ref.split('/');
-        return this.API["response_mapping"][path[path.length - 1]];
-    }
-
-    fetchSingleXBteKgsOperation = (ref) => {
-        const path = ref.split('/');
-        return this.API["kgs_operations"][path[path.length - 1]];
-    }
-
     static fetchPathParams = (methodDoc) => {
         let params = [];
         if (!('parameters' in methodDoc)) {
