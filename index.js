@@ -1,25 +1,19 @@
-const loadJsonFile = require('load-json-file');
-var sha256 = require('hash-anything').sha256;
+const component = require("./component");
+const endpoint = require("./endpoint");
 
-class API {
-    constructor(smartapiSpecPath) {
-        this.smartapiSpecPath = smartapiSpecPath;
-        this.smartapiDoc = {};
-        this.loadSmartAPI();
-    }
+module.exports = class API {
     /**
-     * Update the primary ID from id options
-     * @returns - an id_dict updated with primary id choices
+     * constructor to load SmartAPI specification.
+     * @param {object} smartapiDoc - SmartAPI Specification in Javascript Object format
      */
-    loadSmartAPI = () => {
-        try {
-            this.smartapiDoc = loadJsonFile.sync(this.smartapiSpecPath);
-        } catch (err) {
-            throw new Error("Unable to load your input file");
-        }
+    constructor(smartapiDoc) {
+        this.smartapiDoc = smartapiDoc;
     }
 
-    fetchAPIName = () => {
+    /**
+     * Fetch the title of API from SmartAPI Specification.
+    */
+    fetchAPITitle = () => {
         if (this.smartapiDoc === {}) {
             return undefined
         }
@@ -29,16 +23,22 @@ class API {
         return this.smartapiDoc['info']['title']
     }
 
+    /**
+     * Fetch the tags associated with the API from SmartAPI Specification.
+     */
     fetchAPITags = () => {
         if (this.smartapiDoc === {}) {
-            return []
+            return undefined
         }
         if (!('tags' in this.smartapiDoc)) {
-            return []
+            return undefined
         }
         return this.smartapiDoc['tags'].map(x => x['name'])
     }
 
+    /**
+     * Fetch the url of the server from SmartAPI Specification.
+     */
     fetchServerUrl = () => {
         if (this.smartapiDoc === {}) {
             return undefined
@@ -49,111 +49,42 @@ class API {
         return this.smartapiDoc['servers'][0]['url']
     }
 
+    /**
+     * Fetch component from SmartAPI Specification.
+     */
+    fetchComponents = () => {
+        if (this.smartapiDoc === {}) {
+            return undefined
+        }
+        if (!('components' in this.smartapiDoc)) {
+            return undefined
+        }
+        return new component(this.smartapiDoc.components)
+    }
+
+    /**
+     * Fetch metadata information from SmartAPI Specification.
+     */
     fetchAPIMeta = () => {
         return {
-            name: this.fetchAPIName(),
+            title: this.fetchAPITitle(),
             tags: this.fetchAPITags(),
             url: this.fetchServerUrl(),
-            response_mapping: this.smartapiDoc["components"]["x-bte-response-mapping"],
-            kgs_operations: this.smartapiDoc["components"]["x-bte-kgs-operations"]
+            components: this.fetchComponents()
         }
     }
 
+    /**
+     * Fetch all operations from SmartAPI Specification.
+     */
     fetchAllOpts = () => {
         let res = [];
         const api_meta = this.fetchAPIMeta();
         for (let path of Object.keys(this.smartapiDoc["paths"])) {
-            let ep = new Endpoint(this.smartapiDoc['paths'][path], api_meta, path);
+            let ep = new endpoint(this.smartapiDoc['paths'][path], api_meta, path);
             res = [...res, ...ep.constructEndpointInfo()];
         }
         return res;
     }
 
 }
-
-class Endpoint {
-    constructor(endpointDoc, API, path) {
-        this.endpointDoc = endpointDoc;
-        this.API = API;
-        this.path = path;
-    }
-
-    fetchResponseMapping = (ref) => {
-        const path = ref.split('/');
-        return this.API["response_mapping"][path[path.length - 1]];
-    }
-
-    fetchSingleXBteKgsOperation = (ref) => {
-        const path = ref.split('/');
-        return this.API["kgs_operations"][path[path.length - 1]];
-    }
-
-    static fetchPathParams = (methodDoc) => {
-        let params = [];
-        if (!('parameters' in methodDoc)) {
-            return params
-        }
-        for (let param of methodDoc['parameters']) {
-            if (param['in'] === 'path') {
-                params.push(param['name'])
-            }
-        }
-        return params;
-    }
-
-    parseIndividualOperation = (op, method, path_params) => {
-        let res = [];
-        const server = this.API.url;
-        const api_name = this.API.name;
-        for (let input of op['inputs']) {
-            for (let output of op['outputs']) {
-                let updateInfo = {
-                    query_operation: {
-                        'params': op['parameters'],
-                        'request_body': op['requestBody'],
-                        'path': this.path,
-                        'path_params': path_params,
-                        'method': method,
-                        'server': server,
-                        'api_name': api_name,
-                        'tags': this.API.tags
-                    },
-                    association: {
-                        'input_id': input['id'],
-                        'input_type': input['semantic'],
-                        'output_id': output['id'],
-                        'output_type': output['semantic'],
-                        'predicate': op['predicate']
-                    },
-                    response_mapping: {
-                        [op['predicate']]: this.fetchResponseMapping(op['response_mapping']['$ref'])
-                    }
-                }
-                updateInfo['id'] = sha256(op['query_operation']);
-                res.push(updateInfo)
-            }
-        }
-        return res;
-    }
-
-    constructEndpointInfo = () => {
-        let res = [];
-        for (let method of Object.keys(this.endpointDoc)) {
-            let path_params = this.constructor.fetchPathParams(this.endpointDoc[method]);
-            if ("x-bte-kgs-operations" in this.endpointDoc[method]) {
-                let operation;
-                let op;
-                let tmp;
-                for (let ref of this.endpointDoc[method]["x-bte-kgs-operations"]) {
-                    operation = this.fetchSingleXBteKgsOperation(ref["$ref"]);
-                    for (op of operation) {
-                        res = [...res, ...this.parseIndividualOperation(op, method, path_params)];
-                    }
-                }
-            }
-        }
-        return res;
-    }
-}
-exports.API = API;
-exports.Endpoint = Endpoint;
