@@ -70,11 +70,12 @@ module.exports = class API {
     fetchAllOpts = () => {
         let res = [];
         const api_meta = this.fetchAPIMeta();
-        for (let path of Object.keys(this.smartapiDoc["paths"])) {
-            let ep = new endpoint(this.smartapiDoc['paths'][path], api_meta, path);
-            res = [...res, ...ep.constructEndpointInfo()];
+        if ("paths" in this.smartapiDoc) {
+            for (let path of Object.keys(this.smartapiDoc.paths)) {
+                let ep = new endpoint(this.smartapiDoc.paths[path], api_meta, path);
+                res = [...res, ...ep.constructEndpointInfo()];
+            }
         }
         return res;
     }
-
 }
