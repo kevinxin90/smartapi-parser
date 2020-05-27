@@ -66,6 +66,19 @@ describe('test API parser which is already dereferenced', () => {
     })
 });
 
+describe('test API parser using specs with path parameters', () => {
+    let litvar, path_params;
+    beforeAll(() => {
+        litvar = loadJsonFile.sync("./smartapi/litvar.json")
+        litvar = new api(litvar);
+    });
+
+    test("test path params", () => {
+        path_params = litvar.metadata.operations[0]['query_operation']['path_params'];
+        expect(path_params).toStrictEqual(['variantid']);
+    });
+});
+
 describe('test API parser when input is empty', () => {
     let mygene = {};
     beforeAll(() => {
