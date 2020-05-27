@@ -8,6 +8,8 @@ module.exports = class API {
      */
     constructor(smartapiDoc) {
         this.smartapiDoc = smartapiDoc;
+        this.metadata = this.fetchAPIMeta();
+        this.metadata.operations = this.fetchAllOpts();
     }
 
     /**
