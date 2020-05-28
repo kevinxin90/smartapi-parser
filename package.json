@@ -1,6 +1,6 @@
 {
   "name": "smartapi-parser",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "a nodejs library for parsing smartapi specifications",
   "main": "index.js",
   "dependencies": {

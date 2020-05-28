@@ -60,6 +60,10 @@ module.exports = class API {
             title: this.fetchAPITitle(),
             tags: this.fetchAPITags(),
             url: this.fetchServerUrl(),
+            smartapi: {
+                id: this.smartapiDoc._id,
+                meta: this.smartapiDoc._meta
+            },
             components: this.fetchComponents()
         }
     }
