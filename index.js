@@ -15,7 +15,7 @@ module.exports = class API {
     /**
      * Fetch the title of API from SmartAPI Specification.
     */
-    fetchAPITitle = () => {
+    fetchAPITitle() {
         if (!('info' in this.smartapiDoc)) {
             return undefined
         }
@@ -25,7 +25,7 @@ module.exports = class API {
     /**
      * Fetch the tags associated with the API from SmartAPI Specification.
      */
-    fetchAPITags = () => {
+    fetchAPITags() {
         if (!('tags' in this.smartapiDoc)) {
             return undefined
         }
@@ -35,7 +35,7 @@ module.exports = class API {
     /**
      * Fetch the url of the server from SmartAPI Specification.
      */
-    fetchServerUrl = () => {
+    fetchServerUrl() {
         if (!('servers' in this.smartapiDoc)) {
             return undefined
         }
@@ -45,7 +45,7 @@ module.exports = class API {
     /**
      * Fetch component from SmartAPI Specification.
      */
-    fetchComponents = () => {
+    fetchComponents() {
         if (!('components' in this.smartapiDoc)) {
             return undefined
         }
@@ -55,7 +55,7 @@ module.exports = class API {
     /**
      * Fetch metadata information from SmartAPI Specification.
      */
-    fetchAPIMeta = () => {
+    fetchAPIMeta() {
         return {
             title: this.fetchAPITitle(),
             tags: this.fetchAPITags(),
@@ -71,7 +71,7 @@ module.exports = class API {
     /**
      * Fetch all operations from SmartAPI Specification.
      */
-    fetchAllOpts = () => {
+    fetchAllOpts() {
         let res = [];
         const api_meta = this.fetchAPIMeta();
         if ("paths" in this.smartapiDoc) {
