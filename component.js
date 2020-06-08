@@ -9,7 +9,7 @@ module.exports = class Components {
      * Fetch corresponding component based on $ref provided
      * param {string} ref - the $ref path
      */
-    fetchComponentByRef = (ref) => {
+    fetchComponentByRef(ref) {
         if (ref.startsWith("#/components/")) {
             if (ref.substr(-1) === '/') {
                 ref = ref.substr(0, ref.length - 1);

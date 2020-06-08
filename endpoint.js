@@ -8,7 +8,7 @@ module.exports = class Endpoint {
         this.path = path;
     }
 
-    static fetchPathParams = (methodDoc) => {
+    static fetchPathParams(methodDoc) {
         let params = [];
         if (!('parameters' in methodDoc)) {
             return params
@@ -21,7 +21,7 @@ module.exports = class Endpoint {
         return params;
     }
 
-    parseIndividualOperation = (op, method, path_params) => {
+    parseIndividualOperation(op, method, path_params) {
         let res = [];
         const server = this.API.url;
         const api_name = this.API.title;
@@ -65,7 +65,7 @@ module.exports = class Endpoint {
         return res;
     }
 
-    constructEndpointInfo = () => {
+    constructEndpointInfo() {
         let res = [];
         for (let method of Object.keys(this.endpointDoc)) {
             let path_params = this.constructor.fetchPathParams(this.endpointDoc[method]);
