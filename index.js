@@ -64,7 +64,8 @@ module.exports = class API {
                 id: this.smartapiDoc._id,
                 meta: this.smartapiDoc._meta
             },
-            components: this.fetchComponents()
+            components: this.fetchComponents(),
+            paths: Object.keys(this.smartapiDoc.paths)
         }
     }
 
