@@ -34,10 +34,10 @@ module.exports = class API {
 
     fetchXTranslatorTeam() {
         if (!('info' in this.smartapiDoc)) {
-            return undefined
+            return []
         }
         if (!("x-translator" in this.smartapiDoc.info)) {
-            return undefined
+            return []
         }
         return this.smartapiDoc.info["x-translator"].team;
     }
