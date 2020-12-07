@@ -1,4 +1,4 @@
-const cp = require("../component");
+const cp = require("../src/component");
 
 const components = {
     "parameters": {

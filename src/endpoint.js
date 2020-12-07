@@ -47,7 +47,8 @@ module.exports = class Endpoint {
                         'predicate': op['predicate'],
                         'source': op.source,
                         'api_name': api_name,
-                        'smartapi': this.API.smartapi
+                        'smartapi': this.API.smartapi,
+                        'x-translator': this.API["x-translator"]
                     },
                     response_mapping: {
                         [op['predicate']]: {}

@@ -1,4 +1,4 @@
-const api = require('../index');
+const api = require('../src/index');
 const loadJsonFile = require("load-json-file");
 
 describe('test API parser', () => {

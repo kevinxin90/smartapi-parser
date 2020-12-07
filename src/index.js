@@ -22,6 +22,26 @@ module.exports = class API {
         return this.smartapiDoc['info']['title']
     }
 
+    fetchXTranslatorComponent() {
+        if (!('info' in this.smartapiDoc)) {
+            return undefined
+        }
+        if (!("x-translator" in this.smartapiDoc.info)) {
+            return undefined
+        }
+        return this.smartapiDoc.info["x-translator"].component;
+    }
+
+    fetchXTranslatorTeam() {
+        if (!('info' in this.smartapiDoc)) {
+            return undefined
+        }
+        if (!("x-translator" in this.smartapiDoc.info)) {
+            return undefined
+        }
+        return this.smartapiDoc.info["x-translator"].team;
+    }
+
     /**
      * Fetch the tags associated with the API from SmartAPI Specification.
      */
@@ -60,12 +80,16 @@ module.exports = class API {
             title: this.fetchAPITitle(),
             tags: this.fetchAPITags(),
             url: this.fetchServerUrl(),
+            "x-translator": {
+                component: this.fetchXTranslatorComponent(),
+                team: this.fetchXTranslatorTeam(),
+            },
             smartapi: {
                 id: this.smartapiDoc._id,
                 meta: this.smartapiDoc._meta
             },
             components: this.fetchComponents(),
-            paths: Object.keys(this.smartapiDoc.paths)
+            paths: (this.smartapiDoc.paths instanceof Object) ? Object.keys(this.smartapiDoc.paths) : []
         }
     }
 
