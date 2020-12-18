@@ -2,6 +2,11 @@
 
 [![Build Status](https://travis-ci.com/kevinxin90/smartapi-parser.svg?branch=master)](https://travis-ci.com/kevinxin90/smartapi-parser)
 [![Coverage Status](https://coveralls.io/repos/github/kevinxin90/smartapi-parser/badge.svg?branch=master)](https://coveralls.io/github/kevinxin90/smartapi-parser?branch=master)
+[![TypeScript](https://badges.frapsoft.com/typescript/love/typescript.svg?v=101)](https://github.com/ellerbrock/typescript-badges/)
+![npm](https://img.shields.io/npm/v/smartapi-parser)
+![npm bundle size](https://img.shields.io/bundlephobia/minzip/smartapi-parser)
+![npm](https://img.shields.io/npm/dm/smartapi-parser)
+
 
 A NodeJS library for parsing SmartAPI specifications
 
