@@ -1,8 +1,8 @@
-const api = require('../src/index');
+import api = require("../src/index");
 const loadJsonFile = require("load-json-file");
 
 describe('test API parser', () => {
-    let mygene, metadata, ops;
+    let mygene: any, metadata, ops;
     beforeAll(() => {
         mygene = loadJsonFile.sync("./smartapi/mygene.json")
         mygene = new api(mygene);
@@ -39,7 +39,7 @@ describe('test API parser', () => {
 });
 
 describe('test API parser which is already dereferenced', () => {
-    let opentarget, metadata, ops;
+    let opentarget: any, metadata, ops;
     beforeAll(() => {
         opentarget = loadJsonFile.sync("./smartapi/opentarget.json")
         opentarget = new api(opentarget);
@@ -67,7 +67,7 @@ describe('test API parser which is already dereferenced', () => {
 });
 
 describe('test API parser using specs with path parameters', () => {
-    let litvar, path_params;
+    let litvar: any, path_params;
     beforeAll(() => {
         litvar = loadJsonFile.sync("./smartapi/litvar.json")
         litvar = new api(litvar);
@@ -80,7 +80,7 @@ describe('test API parser using specs with path parameters', () => {
 });
 
 describe('test API parser when input is empty', () => {
-    let mygene = {};
+    let mygene: any = {};
     beforeAll(() => {
         mygene = new api(mygene);
     });
@@ -104,7 +104,7 @@ describe('test API parser when input is empty', () => {
 });
 
 describe('test API parser when input is mal-structured', () => {
-    let mygene = { 'hello': 'world' };
+    let mygene: any = { 'hello': 'world' };
     beforeAll(() => {
         mygene = new api(mygene);
     });

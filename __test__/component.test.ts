@@ -1,4 +1,4 @@
-const cp = require("../src/component");
+import cp = require("../src/component");
 
 const components = {
     "parameters": {
@@ -652,7 +652,7 @@ const components = {
 }
 
 describe('test fetch ref', () => {
-    let cp_obj;
+    let cp_obj: any;
     beforeAll(() => {
         cp_obj = new cp(components);
     });
