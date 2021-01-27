@@ -106,6 +106,9 @@ export = class Endpoint {
                         } else {
                             operation = rec;
                         }
+                        if (!(Array.isArray(operation))) {
+                            operation = [operation];
+                        }
                         for (op of operation) {
                             res = [...res, ...this.parseIndividualOperation({ op, method, pathParams })];
                         }
