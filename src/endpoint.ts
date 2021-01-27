@@ -1,5 +1,6 @@
 const sha256 = require('hash-anything').sha256;
 
+import { option } from 'yargs';
 import {
     SmartAPIPathItemObject,
     ParsedAPIMetadataObject,
@@ -74,6 +75,9 @@ export = class Endpoint {
                         [op.predicate]: {},
                     },
                 };
+                if ('responseMapping' in op) {
+                    op.response_mapping = op.responseMapping;
+                }
                 if ('$ref' in op.response_mapping) {
                     updateInfo.response_mapping[op.predicate] = this.apiMetadata.components.fetchComponentByRef(
                         op.response_mapping.$ref,

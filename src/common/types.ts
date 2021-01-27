@@ -115,6 +115,7 @@ export interface XBTEKGSOperationObject {
   supportBatch?: boolean;
   inputSeparator?: string;
   response_mapping: SmartAPIReferenceObject;
+  responseMapping?: SmartAPIReferenceObject;
 }
 
 export interface SmartAPISpec {
