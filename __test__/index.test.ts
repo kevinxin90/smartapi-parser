@@ -60,8 +60,8 @@ describe('test API parser which is already dereferenced', () => {
     test("test fetch all operations", () => {
         ops = opentarget.fetchAllOpts();
         expect(ops[0].association.api_name).toBe("OpenTarget API");
-        expect(ops[0].association.predicate).toBe('biolink:related_to');
-        expect(ops[0].association.input_id).toBe('biolink:ENSEMBL');
+        expect(ops[0].association.predicate).toBe('related_to');
+        expect(ops[0].association.input_id).toBe('ENSEMBL');
         expect(ops[0].query_operation.path).toBe('/platform/public/evidence/filter');
     })
 });
