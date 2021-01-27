@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.6](https://github.com/kevinxin90/smartapi-parser/compare/v1.3.5...v1.3.6) (2021-01-27)
+
+
+### Bug Fixes
+
+* :bug: remove biolink prefix if provided ([baa7f24](https://github.com/kevinxin90/smartapi-parser/commit/baa7f24fd336c44d3a115e5210345aeb2eda2088))
+
 ### [1.3.5](https://github.com/kevinxin90/smartapi-parser/compare/v1.3.4...v1.3.5) (2021-01-27)
 
 
