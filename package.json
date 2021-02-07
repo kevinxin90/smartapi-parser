@@ -4,14 +4,12 @@
   "description": "a nodejs library for parsing smartapi specifications",
   "main": "built/index.js",
   "dependencies": {
-    "@commitlint/cli": "^11.0.0",
-    "@commitlint/config-conventional": "^11.0.0",
-    "@types/lodash": "^4.14.165",
-    "hash-anything": "^1.2.2",
     "husky": "^4.3.8",
     "lodash": "^4.17.15"
   },
   "devDependencies": {
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
     "@types/jest": "^26.0.19",
     "coveralls": "^3.1.0",
     "jest": "^26.0.1",
