@@ -1,13 +1,13 @@
-const sha256 = require('hash-anything').sha256;
-
-import { option } from 'yargs';
 import {
     SmartAPIPathItemObject,
     ParsedAPIMetadataObject,
     SmartAPIKGOperationObject,
     SmartAPIOperationObject,
     XBTEKGSOperationObject,
+    XBTEKGSOperationBioEntityObject,
+    SmartAPIReferenceObject
 } from './common/types';
+import QueryOperationObject from './query_operation';
 
 export = class Endpoint {
     pathItemObject: SmartAPIPathItemObject;
@@ -33,6 +33,65 @@ export = class Endpoint {
         return params;
     }
 
+    private constructQueryOperation({
+        op,
+        method,
+        pathParams,
+    }: {
+        op: XBTEKGSOperationObject;
+        method: string;
+        pathParams: string[];
+    }) {
+        const server = this.apiMetadata.url;
+        const query_operation = new QueryOperationObject();
+        query_operation.xBTEKGSOperation = op;
+        query_operation.method = method;
+        query_operation.path_params = pathParams;
+        query_operation.server = server;
+        query_operation.path = this.path;
+        query_operation.tags = this.apiMetadata.tags;
+        return query_operation;
+    }
+
+    private removeBioLinkPrefix(input: string | undefined) {
+        if (typeof input === "undefined") {
+            return input;
+        }
+        if (input.startsWith("biolink:")) {
+            return input.replace(/biolink:/ig, "");
+        }
+        return input;
+    }
+
+    private resolveRefIfProvided(rec: SmartAPIReferenceObject) {
+        return ('$ref' in rec) ? this.apiMetadata.components.fetchComponentByRef(rec.$ref) : rec;
+    }
+
+    private constructAssociation(input: XBTEKGSOperationBioEntityObject, output: XBTEKGSOperationBioEntityObject, op: XBTEKGSOperationObject) {
+        return {
+            input_id: this.removeBioLinkPrefix(input.id),
+            input_type: this.removeBioLinkPrefix(input.semantic),
+            output_id: this.removeBioLinkPrefix(output.id),
+            output_type: this.removeBioLinkPrefix(output.semantic),
+            predicate: this.removeBioLinkPrefix(op.predicate),
+            source: op.source,
+            api_name: this.apiMetadata.title,
+            smartapi: this.apiMetadata.smartapi,
+            'x-translator': this.apiMetadata['x-translator'],
+        }
+    }
+
+    private constructResponseMapping(op: XBTEKGSOperationObject) {
+        if ('responseMapping' in op) {
+            op.response_mapping = op.responseMapping;
+        }
+        return {
+            [op.predicate]: this.resolveRefIfProvided(
+                op.response_mapping
+            )
+        };
+    }
+
     private parseIndividualOperation({
         op,
         method,
@@ -43,49 +102,17 @@ export = class Endpoint {
         pathParams: string[];
     }) {
         const res = [];
-        const server = this.apiMetadata.url;
-        const apiName = this.apiMetadata.title;
+        const query_operation = this.constructQueryOperation({ op, method, pathParams })
+        const response_mapping = this.constructResponseMapping(op);
         for (const input of op.inputs) {
             for (const output of op.outputs) {
                 let updateInfo = {} as SmartAPIKGOperationObject;
+                const association = this.constructAssociation(input, output, op);
                 updateInfo = {
-                    query_operation: {
-                        params: op.parameters,
-                        request_body: op.requestBody,
-                        path: this.path,
-                        path_params: pathParams,
-                        method,
-                        server,
-                        tags: this.apiMetadata.tags,
-                        supportBatch: op.supportBatch,
-                        inputSeparator: op.inputSeparator,
-                    },
-                    association: {
-                        input_id: input.id.replace("biolink:", ""),
-                        input_type: input.semantic.replace("biolink:", ""),
-                        output_id: output.id.replace("biolink:", ""),
-                        output_type: output.semantic.replace("biolink:", ""),
-                        predicate: op.predicate.replace("biolink:", ""),
-                        source: op.source,
-                        api_name: apiName,
-                        smartapi: this.apiMetadata.smartapi,
-                        'x-translator': this.apiMetadata['x-translator'],
-                    },
-                    response_mapping: {
-                        [op.predicate]: {},
-                    },
+                    query_operation,
+                    association,
+                    response_mapping,
                 };
-                if ('responseMapping' in op) {
-                    op.response_mapping = op.responseMapping;
-                }
-                if ('$ref' in op.response_mapping) {
-                    updateInfo.response_mapping[op.predicate] = this.apiMetadata.components.fetchComponentByRef(
-                        op.response_mapping.$ref,
-                    );
-                } else {
-                    updateInfo.response_mapping[op.predicate] = op.response_mapping;
-                }
-                updateInfo.id = sha256(updateInfo.query_operation);
                 res.push(updateInfo);
             }
         }
@@ -94,10 +121,6 @@ export = class Endpoint {
 
     constructEndpointInfo() {
         let res = [] as SmartAPIKGOperationObject[];
-        enum AcceptedMethod {
-            'get',
-            'post',
-        }
         ['get', 'post'].map((method) => {
             if (method in this.pathItemObject) {
                 const pathParams = this.fetchPathParams(this.pathItemObject[method]);
@@ -105,14 +128,8 @@ export = class Endpoint {
                     let operation;
                     let op;
                     for (const rec of this.pathItemObject[method]['x-bte-kgs-operations']) {
-                        if ('$ref' in rec) {
-                            operation = this.apiMetadata.components.fetchComponentByRef(rec.$ref);
-                        } else {
-                            operation = rec;
-                        }
-                        if (!(Array.isArray(operation))) {
-                            operation = [operation];
-                        }
+                        operation = this.resolveRefIfProvided(rec);
+                        operation = (Array.isArray(operation)) ? operation : [operation];
                         for (op of operation) {
                             res = [...res, ...this.parseIndividualOperation({ op, method, pathParams })];
                         }

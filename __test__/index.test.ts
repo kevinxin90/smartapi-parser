@@ -3,12 +3,14 @@ const loadJsonFile = require("load-json-file");
 
 describe('test API parser', () => {
     let mygene: any, metadata, ops;
-    beforeAll(() => {
-        mygene = loadJsonFile.sync("./smartapi/mygene.json")
-        mygene = new api(mygene);
+    beforeEach(() => {
+        const mygene_doc = loadJsonFile.sync("./smartapi/mygene.json")
+        mygene = new api(mygene_doc);
     });
 
     test('test parse API name', () => {
+        const mygene_doc = loadJsonFile.sync("./smartapi/mygene.json")
+        mygene = new api(mygene_doc);
         expect(mygene.fetchAPITitle()).toBe('MyGene.info API');
     });
 
@@ -69,12 +71,12 @@ describe('test API parser which is already dereferenced', () => {
 describe('test API parser using specs with path parameters', () => {
     let litvar: any, path_params;
     beforeAll(() => {
-        litvar = loadJsonFile.sync("./smartapi/litvar.json")
-        litvar = new api(litvar);
+
     });
 
     test("test path params", () => {
-        path_params = litvar.metadata.operations[0]['query_operation']['path_params'];
+        litvar = loadJsonFile.sync("./smartapi/litvar.json");
+        litvar = new api(litvar); path_params = litvar.metadata.operations[0]['query_operation']['path_params'];
         expect(path_params).toStrictEqual(['variantid']);
     });
 });

@@ -19,7 +19,7 @@ interface SmartAPIServerObject {
   'x-maturity': any;
 }
 
-interface SmartAPIReferenceObject {
+export interface SmartAPIReferenceObject {
   $ref?: string;
 }
 
@@ -100,6 +100,7 @@ interface SmartAPITagObject {
 export interface SmartAPIComponentObject {
   [propName: string]: any;
 }
+
 export interface XBTEKGSOperationBioEntityObject {
   id: string;
   semantic: string;
@@ -110,11 +111,11 @@ export interface XBTEKGSOperationObject {
   outputs: XBTEKGSOperationBioEntityObject[];
   predicate: string;
   source?: string;
-  parameters?: any;
+  parameters?: XBTEParametersObject;
   requestBody?: any;
   supportBatch?: boolean;
   inputSeparator?: string;
-  response_mapping: SmartAPIReferenceObject;
+  response_mapping?: SmartAPIReferenceObject;
   responseMapping?: SmartAPIReferenceObject;
 }
 
@@ -148,9 +149,21 @@ interface KGAssociationObject {
   'x-translator'?: any;
 }
 
+export interface QueryOperationInterface {
+  path: string;
+  method: string;
+  server: string;
+  tags: string[];
+  path_params: string[];
+  params: XBTEParametersObject;
+  request_body: object;
+  supportBatch: boolean;
+  inputSeparator: string;
+}
+
 export interface SmartAPIKGOperationObject {
   association: KGAssociationObject;
-  query_operation?: any;
+  query_operation?: QueryOperationInterface;
   response_mapping?: any;
   id?: string;
   tags?: string[];
@@ -165,4 +178,8 @@ export interface ParsedAPIMetadataObject {
   smartapi: SmartAPIRegistryRecordObject;
   'x-translator': XTranslatorObject;
   operations: SmartAPIKGOperationObject[];
+}
+
+export interface XBTEParametersObject {
+  [key: string]: string | number;
 }
