@@ -1,6 +1,6 @@
 # smartapi-parser
 
-[![Build Status](https://travis-ci.com/kevinxin90/smartapi-parser.svg?branch=master)](https://travis-ci.com/kevinxin90/smartapi-parser)
+![Test Coveralls](https://github.com/kevinxin90/smartapi-parser/workflows/Test%20Coveralls/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/kevinxin90/smartapi-parser/badge.svg?branch=master)](https://coveralls.io/github/kevinxin90/smartapi-parser?branch=master)
 [![TypeScript](https://badges.frapsoft.com/typescript/love/typescript.svg?v=101)](https://github.com/ellerbrock/typescript-badges/)
 ![npm](https://img.shields.io/npm/v/smartapi-parser)
