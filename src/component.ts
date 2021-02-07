@@ -8,6 +8,16 @@ export = class Components {
     this.components = components;
   }
 
+  private fetch(obj: any, key: string) {
+    if (["#", "components"].includes(key)) {
+      return obj;
+    }
+    if ((!(typeof obj === "undefined")) && (key in obj)) {
+      return obj[key];
+    }
+    return undefined;
+  }
+
   /**
    * Fetch corresponding component based on $ref provided
    * param {string} ref - the $ref path
@@ -17,13 +27,11 @@ export = class Components {
       if (ref.substr(-1) === '/') {
         ref = ref.substr(0, ref.length - 1);
       }
-      let res = _.cloneDeep(this.components);
-      const path = ref.split('/');
+      let res = this.components;
+      const paths = ref.split('/');
       try {
-        for (const ele of path) {
-          if (!['#', 'components'].includes(ele)) {
-            res = res[ele];
-          }
+        for (const ele of paths) {
+          res = this.fetch(res, ele);
         }
       } catch (err) {
         return undefined;
@@ -33,3 +41,5 @@ export = class Components {
     return undefined;
   }
 };
+
+
