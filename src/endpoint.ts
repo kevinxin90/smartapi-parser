@@ -43,14 +43,14 @@ export = class Endpoint {
         pathParams: string[];
     }) {
         const server = this.apiMetadata.url;
-        const query_operation = new QueryOperationObject();
-        query_operation.xBTEKGSOperation = op;
-        query_operation.method = method;
-        query_operation.path_params = pathParams;
-        query_operation.server = server;
-        query_operation.path = this.path;
-        query_operation.tags = this.apiMetadata.tags;
-        return query_operation;
+        const queryOperation = new QueryOperationObject();
+        queryOperation.xBTEKGSOperation = op;
+        queryOperation.method = method;
+        queryOperation.path_params = pathParams;
+        queryOperation.server = server;
+        queryOperation.path = this.path;
+        queryOperation.tags = this.apiMetadata.tags;
+        return queryOperation;
     }
 
     private removeBioLinkPrefix(input: string | undefined) {
@@ -102,16 +102,16 @@ export = class Endpoint {
         pathParams: string[];
     }) {
         const res = [];
-        const query_operation = this.constructQueryOperation({ op, method, pathParams })
-        const response_mapping = this.constructResponseMapping(op);
+        const queryOperation = this.constructQueryOperation({ op, method, pathParams })
+        const responseMapping = this.constructResponseMapping(op);
         for (const input of op.inputs) {
             for (const output of op.outputs) {
                 let updateInfo = {} as SmartAPIKGOperationObject;
                 const association = this.constructAssociation(input, output, op);
                 updateInfo = {
-                    query_operation,
+                    query_operation: queryOperation,
                     association,
-                    response_mapping,
+                    response_mapping: responseMapping,
                 };
                 res.push(updateInfo);
             }

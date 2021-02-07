@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { SmartAPIComponentObject } from './common/types';
 
 export = class Components {
